@@ -6,12 +6,13 @@
 #   ./scripts/build-skills.sh zh         # build only the Chinese edition
 #   ./scripts/build-skills.sh en         # build only the English edition
 #
-# Output: dist/spec-driven-test-zh.skill
-#         dist/spec-driven-test-en.skill
+# Output: dist/spec-test.skill           (English — published asset name
+#                                         matches the GitHub repo name)
+#         dist/spec-test-zh.skill        (Chinese — local use only)
 #
 # A .skill file is just a zip archive whose top-level entry is a folder
-# named `spec-driven-test/`. Cowork / Claude Code's skill installer
-# accepts these directly.
+# named `spec-driven-test/` (the skill's actual identity). Cowork /
+# Claude Code's skill installer accepts these directly.
 
 set -euo pipefail
 
@@ -22,7 +23,13 @@ mkdir -p "${DIST_DIR}"
 build_edition() {
   local edition="$1"          # "zh" or "en"
   local src_dir="${REPO_ROOT}/${edition}"
-  local out_file="${DIST_DIR}/spec-driven-test-${edition}.skill"
+  local out_file
+  if [[ "${edition}" == "en" ]]; then
+    # English is the published/distributed bundle; name matches repo.
+    out_file="${DIST_DIR}/spec-test.skill"
+  else
+    out_file="${DIST_DIR}/spec-test-${edition}.skill"
+  fi
 
   if [[ ! -d "${src_dir}" ]]; then
     echo "  ✗ source directory not found: ${src_dir}" >&2

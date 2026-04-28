@@ -1,14 +1,14 @@
 <div align="center">
 
-# spec-driven-test
+# spec-test.skill
 
 **A Claude skill for rigorous, end-to-end testing of web applications.**
 
 *Three cooperating agents · Two human review gates · Real-browser execution*
 
-[![Skill](https://img.shields.io/badge/Claude-skill-d4a373)](https://github.com/Loveforwa/spec-driven-test)
+[![Skill](https://img.shields.io/badge/Claude-skill-d4a373)](https://github.com/Loveforwa/spec-test.skill)
 [![Editions](https://img.shields.io/badge/editions-EN%20%7C%20%E4%B8%AD%E6%96%87-success)](#-editions)
-[![Latest release](https://img.shields.io/github/v/release/Loveforwa/spec-driven-test?include_prereleases&label=latest&color=blue)](https://github.com/Loveforwa/spec-driven-test/releases)
+[![Latest release](https://img.shields.io/github/v/release/Loveforwa/spec-test.skill?include_prereleases&label=latest&color=blue)](https://github.com/Loveforwa/spec-test.skill/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange)](#-contributing)
 
 [**Download**](#-install) · [**How it works**](#-how-it-works) · [**Contribute**](#-contributing) · [**中文**](#中文)
@@ -30,7 +30,7 @@
 
 <div align="center">
 
-### [📥 Download `spec-driven-test-en.skill`](https://github.com/Loveforwa/spec-driven-test/releases/latest/download/spec-driven-test-en.skill)
+### [📥 Download `spec-test.skill`](https://github.com/Loveforwa/spec-test.skill/releases/latest/download/spec-test.skill)
 
 *One file. Drop it in. Done.*
 
@@ -44,22 +44,22 @@
 **Clone and copy the edition you want:**
 
 ```sh
-git clone https://github.com/Loveforwa/spec-driven-test.git
+git clone https://github.com/Loveforwa/spec-test.skill.git
 # English edition
-cp -r spec-driven-test/en /path/to/your/skills/spec-driven-test
+cp -r spec-test.skill/en /path/to/your/skills/spec-driven-test
 # Or Chinese edition (中文版)
-cp -r spec-driven-test/zh /path/to/your/skills/spec-driven-test
+cp -r spec-test.skill/zh /path/to/your/skills/spec-driven-test
 ```
 
 **Build the `.skill` bundle yourself:**
 
 ```sh
-git clone https://github.com/Loveforwa/spec-driven-test.git
-cd spec-driven-test
+git clone https://github.com/Loveforwa/spec-test.skill.git
+cd spec-test.skill
 ./scripts/build-skills.sh           # builds both editions
 ./scripts/build-skills.sh en        # English only
 ./scripts/build-skills.sh zh        # Chinese only
-# Output: dist/spec-driven-test-{en,zh}.skill
+# Output: dist/spec-test.skill (English) and dist/spec-test-zh.skill (Chinese)
 ```
 
 </details>
@@ -154,7 +154,7 @@ The skill ships in two **content-equivalent** editions. Pick whichever language 
 
 | Edition | Path | Prebuilt bundle | Best for |
 |---|---|---|---|
-| 🇬🇧 **English** | [`en/`](./en) | ✅ [Latest release](https://github.com/Loveforwa/spec-driven-test/releases/latest) | English-speaking teams, international collaboration |
+| 🇬🇧 **English** | [`en/`](./en) | ✅ [Latest release](https://github.com/Loveforwa/spec-test.skill/releases/latest) | English-speaking teams, international collaboration |
 | 🇨🇳 **中文** | [`zh/`](./zh) | Build with `./scripts/build-skills.sh zh` | 团队用中文写规约和评审 |
 
 Each edition is a complete skill: `SKILL.md`, `references/` (agent rulebooks, testing methodologies, scenario patterns), `templates/`, and `examples/`.
@@ -181,7 +181,7 @@ That includes — but isn't limited to:
 
 | You have… | Send it via |
 |---|---|
-| 🐛 A bug or usage issue | [Open an Issue](https://github.com/Loveforwa/spec-driven-test/issues/new) — what you tested, which agent, what happened, what you expected |
+| 🐛 A bug or usage issue | [Open an Issue](https://github.com/Loveforwa/spec-test.skill/issues/new) — what you tested, which agent, what happened, what you expected |
 | 💡 An improvement idea | An Issue with the `enhancement` label, **or** a Pull Request |
 | 🌐 A translation fix | Pull Request — please update **both** `en/` and `zh/` so editions stay in sync |
 | 📝 A real-world example | Pull Request to `en/examples/` **and** `zh/examples/` |
@@ -251,16 +251,16 @@ Operator 真实浏览器执行  →  📋 执行报告 + 截图
 ### 安装
 
 ```sh
-git clone https://github.com/Loveforwa/spec-driven-test.git
-cp -r spec-driven-test/zh /path/to/your/skills/spec-driven-test
+git clone https://github.com/Loveforwa/spec-test.skill.git
+cp -r spec-test.skill/zh /path/to/your/skills/spec-driven-test
 ```
 
 或者本地打包成 `.skill`:
 
 ```sh
-cd spec-driven-test
+cd spec-test.skill
 ./scripts/build-skills.sh zh
-# 产物:dist/spec-driven-test-zh.skill
+# 产物:dist/spec-test-zh.skill
 ```
 
 > Releases 里只发布英文版的预编译 `.skill`。中文版要么直接 clone 用源目录,要么本地打包(中文版 maintainer 容量有限,所以不发预编译包)。
