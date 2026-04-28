@@ -19,8 +19,7 @@
 
 > A disciplined workflow that turns *"write some E2E tests"* into a structured pipeline:
 > read code → write a spec → derive test cases → review against testing methodologies → run in a real browser → produce an evidence-backed report.
->
-> *把"写点 E2E 测试"这件事变成一套有方法论的流程:读代码 → 写规约 → 推导用例 → 方法论审用例 → 真实浏览器执行 → 出带证据的报告。*
+
 
 ---
 
