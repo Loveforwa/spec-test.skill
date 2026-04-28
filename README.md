@@ -1,322 +1,280 @@
+<div align="center">
+
 # spec-driven-test
 
-> A Claude skill that helps small teams and individual developers run rigorous end-to-end tests on web applications, using a specification-based testing methodology.
->
-> 一个 Claude skill,帮助小团队和个人开发者用规约驱动测试(specification-based testing)的方法对 web 应用做严谨的端到端(E2E)测试。
+**A Claude skill for rigorous, end-to-end testing of web applications.**
+
+*Three cooperating agents · Two human review gates · Real-browser execution*
+
+[![Skill](https://img.shields.io/badge/Claude-skill-d4a373)](https://github.com/Loveforwa/spec-driven-test)
+[![Editions](https://img.shields.io/badge/editions-EN%20%7C%20%E4%B8%AD%E6%96%87-success)](#-editions)
+[![Latest release](https://img.shields.io/github/v/release/Loveforwa/spec-driven-test?include_prereleases&label=latest&color=blue)](https://github.com/Loveforwa/spec-driven-test/releases)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange)](#-contributing)
+
+[**Download**](#-install) · [**How it works**](#-how-it-works) · [**Contribute**](#-contributing) · [**中文**](#中文)
+
+</div>
 
 ---
 
-## English
+> A disciplined workflow that turns *"write some E2E tests"* into a structured pipeline:
+> read code → write a spec → derive test cases → review against testing methodologies → run in a real browser → produce an evidence-backed report.
+>
+> *把"写点 E2E 测试"这件事变成一套有方法论的流程:读代码 → 写规约 → 推导用例 → 方法论审用例 → 真实浏览器执行 → 出带证据的报告。*
 
-### What this skill does
+---
 
-`spec-driven-test` turns "write some E2E tests" into a disciplined three-stage workflow run by three cooperating Claude agents, with two human review gates in the middle:
+## ⚡ Install
 
-1. **Cartographer** reads your code and produces a written **spec** of the feature under test, then translates that spec into concrete **test cases**.
-2. **Inspector** reviews those test cases against established testing methodologies (boundary value analysis, equivalence partitioning, decision tables, state transition, use case testing, Right-BICEP) and a checklist of common scenario patterns, returning P0 / P1 / P2 graded feedback.
-3. **Operator** drives a real browser (Playwright or Claude in Chrome) to execute every test case and produce an evidence-backed execution report with screenshots.
+**The fastest path:** grab the pre-built English `.skill` bundle from the latest release and drag it into Cowork's skill installer (or extract it into `~/.claude/skills/`).
 
-Two human review checkpoints (one after the spec, one after the test cases) keep a person in the loop on the things that matter — *is the spec actually right?* and *are these the tests we want to run?* — without making humans do the busywork.
+<div align="center">
 
-### Why it exists
+### [📥 Download `spec-driven-test-en.skill`](https://github.com/Loveforwa/spec-driven-test/releases/latest/download/spec-driven-test-en.skill)
 
-E2E testing is the layer most often skipped by small teams and individual developers because writing good tests by hand is slow, and "vibe-coded" tests miss the unhappy paths. This skill is designed to give a single developer the rigor of a dedicated QA process: structured specs, methodology-driven test design, real-browser execution, and a reproducible report — without needing a separate QA team.
+*One file. Drop it in. Done.*
 
-### How it works
+</div>
 
-You point the skill at a feature ("test the login flow", "test the chat message rendering"). From there, the skill drives a 7-step workflow with **two human review checkpoints** built in:
+<details>
+<summary><b>Other install methods</b> — clone the repo, use the Chinese edition, or build from source</summary>
 
-```
-   You: "test feature X"
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 1. Cartographer · Phase 0                  │  Confirm scope, gather optional info
-   │    Confirm test scope                      │  (ground truth, UI screenshots,
-   │                                            │   Operator's tool capabilities)
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 2. Cartographer · Phase 1                  │  Reads code → writes a structured
-   │    Code → Spec                             │  spec doc; tags matching scenario
-   │                                            │  patterns
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ╔════════════════════════════════════════════╗
-   ║  HUMAN REVIEW #1 — Is the spec correct?    ║  You read the spec, fix anything
-   ╚════════════════════════════════════════════╝  the agent misread
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 3. Cartographer · Phase 2 (+ 2.5)          │  Spec → concrete test cases with
-   │    Spec → Test Cases                       │  steps, expected results, screenshot
-   │                                            │  checkpoints; fills self-check tables
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 4. Inspector                               │  Reviews test cases against testing
-   │    Methodology-based review                │  methodologies and scenario patterns;
-   │                                            │  returns P0 / P1 / P2 graded feedback
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 5. Cartographer · Phase 3                  │  Decides per-feedback: accept &
-   │    Respond to feedback                     │  modify, or reject with rationale
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ╔════════════════════════════════════════════╗
-   ║  HUMAN REVIEW #2 — Are these the tests     ║  You read the final test cases,
-   ║  we want to run?                           ║  greenlight execution
-   ╚════════════════════════════════════════════╝
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 6. Operator                                │  Drives a real browser (Playwright
-   │    Execute in a real browser               │  / Claude in Chrome) — runs every
-   │                                            │  test case, captures screenshots
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 7. Execution report                        │  Pass / fail per case, with
-   │                                            │  screenshot evidence and root-cause
-   │                                            │  notes for any failures
-   └────────────────────────────────────────────┘
-```
+<br>
 
-**The three agents and their boundaries:**
-
-| Agent | Role | Sees | Does NOT see |
-|---|---|---|---|
-| **Cartographer** | Map maker | Code + spec + test cases + Inspector feedback | (no restriction) |
-| **Inspector** | Reviewer | Spec + test cases + methodologies | **Code** — keeps review honest |
-| **Operator** | Real user simulator | Test cases + actual browser state | **Spec design intent** — and may not take API/SQL shortcuts for the trigger action; must drive the UI like a real user |
-
-**Hybrid execution (Operator):** for each test case, Cartographer marks one of three modes — **Playwright** (data flow / regression), **LLM-driven browser** (visual / UX), or **Hybrid** (Playwright runs the flow + saves screenshots at key checkpoints, LLM judges the screenshots). Most chatbot / CRUD / dashboard tests end up Hybrid.
-
-**What you (the human) actually do:** trigger the workflow, then review the spec at gate #1 and the test cases at gate #2. The agents handle code reading, spec writing, methodology selection, test design, browser driving, and report generation.
-
-**What you get out:** a spec document, a test case document, and an execution report (with screenshots) — all in markdown, all version-controllable, all rerunnable.
-
-### Two language editions
-
-This repository ships the skill in two editions. They are content-equivalent — pick whichever language your team works in.
-
-| Edition | Path | Use when |
-|---|---|---|
-| **Chinese (中文)** | [`zh/`](./zh) | Your team writes specs and reviews in Chinese, or your codebase comments are mostly Chinese. |
-| **English** | [`en/`](./en) | Your team works in English, or you want to share the skill with international collaborators. |
-
-Each edition contains the full skill: `SKILL.md`, `references/` (the agent rulebooks, methodology references, and scenario patterns), `templates/`, and `examples/`.
-
-### How to install
-
-**Option 1 — Download the prebuilt `.skill` bundle (easiest):**
-
-Grab the latest release and drag the `.skill` file into Cowork's skill installer (or unzip into your `~/.claude/skills/` directory):
-
-- 🇬🇧 English edition: [`spec-driven-test-en.skill`](https://github.com/Loveforwa/spec-driven-test/releases/latest/download/spec-driven-test-en.skill)
-- 🇨🇳 Chinese edition: [`spec-driven-test-zh.skill`](https://github.com/Loveforwa/spec-driven-test/releases/latest/download/spec-driven-test-zh.skill)
-- Or browse all releases: [Releases page](https://github.com/Loveforwa/spec-driven-test/releases)
-
-**Option 2 — Clone the repo and copy the folder:**
+**Clone and copy the edition you want:**
 
 ```sh
 git clone https://github.com/Loveforwa/spec-driven-test.git
+# English edition
 cp -r spec-driven-test/en /path/to/your/skills/spec-driven-test
+# Or Chinese edition (中文版)
+cp -r spec-driven-test/zh /path/to/your/skills/spec-driven-test
 ```
 
-**Option 3 — Build the `.skill` bundle yourself:**
+**Build the `.skill` bundle yourself:**
 
 ```sh
 git clone https://github.com/Loveforwa/spec-driven-test.git
 cd spec-driven-test
-./scripts/build-skills.sh        # produces dist/spec-driven-test-{zh,en}.skill
+./scripts/build-skills.sh           # builds both editions
+./scripts/build-skills.sh en        # English only
+./scripts/build-skills.sh zh        # Chinese only
+# Output: dist/spec-driven-test-{en,zh}.skill
 ```
 
-### Contributing — feedback and improvements are very welcome
-
-This skill is a living document. **If you have a reasonable suggestion, we will adopt it.** That includes — but is not limited to:
-
-- Bugs you hit while running the workflow on a real project
-- Wording that is unclear, ambiguous, or wrong
-- Missing scenario patterns (e.g. you tested a feature whose pattern wasn't covered)
-- Methodology references that are inaccurate or could be clearer
-- Translation issues in either edition (English ↔ Chinese parity)
-- New examples drawn from real projects
-- Improvements to the templates
-
-**How to contribute:**
-
-- **Report a usage issue or bug**: open a GitHub Issue. Tell us what you were testing, which agent you were running, what happened, and what you expected. Logs or transcript snippets help a lot.
-- **Suggest an improvement**: open an Issue with the `enhancement` label, or open a Pull Request directly.
-- **Submit a translation fix**: PRs welcome — please update *both* `zh/` and `en/` so the two editions stay in sync.
-- **Add a real-world example**: PRs welcome under `zh/examples/` and `en/examples/`.
-
-We're a small project. Reasonable feedback and PRs from anyone are appreciated and will be taken seriously.
-
-### License & questions
-
-If you have a usage question that isn't a bug, please still open an Issue — odds are someone else has the same question.
+</details>
 
 ---
 
+## 🎯 What it does
+
+`spec-driven-test` orchestrates **three Claude agents** behind **two human review gates** to test one feature of a web app, end to end:
+
+|  | Stage | Driven by | Output |
+|---|---|---|---|
+| 1 | Confirm scope | Cartographer · Phase 0 | Agreed test boundary |
+| 2 | **Spec** | Cartographer · Phase 1 | Structured feature spec |
+| 🛂 | **Human Review #1** | *You* | Spec confirmed correct |
+| 3 | **Test cases** | Cartographer · Phase 2 | Concrete TCs (steps + expected outcomes) |
+| 4 | Methodology review | Inspector | P0 / P1 / P2 graded feedback |
+| 5 | Adjudication | Cartographer · Phase 3 | Accept / reject each item, with rationale |
+| 🛂 | **Human Review #2** | *You* | Greenlight to execute |
+| 6 | Execution | Operator | Real-browser run with screenshots |
+| 7 | Report | Operator | Pass / fail report + evidence |
+
+Each agent has a deliberately **limited view** of the world. That isolation is what keeps the review honest — Inspector can't rationalize away a flawed test case by glancing at the code, and Operator can't take API shortcuts that hide a broken UI.
+
+---
+
+## 🔍 How it works
+
+```mermaid
+flowchart TD
+    user(["👤 You: <i>test feature X</i>"])
+    p0["📐 <b>Cartographer · Phase 0</b><br/>Confirm test scope"]
+    p1["📐 <b>Cartographer · Phase 1</b><br/>Code → <b>Spec</b>"]
+    h1{{"🛂 <b>Human Review #1</b><br/>Is the spec correct?"}}
+    p2["📐 <b>Cartographer · Phase 2</b><br/>Spec → <b>Test cases</b>"]
+    insp["🔍 <b>Inspector</b><br/>Methodology review<br/>P0 / P1 / P2 feedback"]
+    p3["📐 <b>Cartographer · Phase 3</b><br/>Respond to feedback<br/>(accept / reject + rationale)"]
+    h2{{"🛂 <b>Human Review #2</b><br/>Greenlight execution?"}}
+    op["🎭 <b>Operator</b><br/>Drives a real browser<br/>Playwright / Claude in Chrome"]
+    rep(["📋 <b>Execution report</b><br/>pass · fail · screenshots"])
+
+    user --> p0 --> p1 --> h1 --> p2 --> insp --> p3 --> h2 --> op --> rep
+
+    classDef phase fill:#fff5d6,stroke:#d4a373,color:#000,stroke-width:1.5px
+    classDef human fill:#deebf7,stroke:#3182bd,color:#000,stroke-width:2px
+    classDef io fill:#f3f3f3,stroke:#888,color:#000
+
+    class p0,p1,p2,p3 phase
+    class h1,h2 human
+    class user,op,insp,rep io
+```
+
+### The three agents and their boundaries
+
+| Agent | Role | Sees | Deliberately doesn't see |
+|---|---|---|---|
+| 📐 **Cartographer** | Map maker | Code + spec + test cases + feedback | *(no restriction — but isolated from execution)* |
+| 🔍 **Inspector** | Reviewer | Spec + test cases + methodologies | **Code** — so review is grounded in spec, not implementation |
+| 🎭 **Operator** | Real-user simulator | Test cases + browser state | **Spec design intent** — and must drive the UI; **no API/SQL shortcuts** for the trigger action |
+
+### Operator's hybrid execution
+
+For each test case, Cartographer marks one execution mode based on what the test is actually checking:
+
+| Mode | Best for | How |
+|---|---|---|
+| 🤖 **Playwright** | Data flow, regression, business logic | Generates `.spec.ts`, runs deterministically |
+| 👁️ **LLM browser** | Visual / UX / rendering / exploratory | LLM drives the browser, judges via screenshots |
+| ⚖️ **Hybrid** *(default)* | Chatbot / CRUD / dashboard / most things | Playwright runs the flow + saves screenshots at checkpoints, LLM judges the screenshots |
+
+### What you actually do as the human
+
+Two things, in two places: **review the spec** at gate #1, **review the test cases** at gate #2. Everything else — code reading, spec writing, methodology selection, test design, browser driving, report writing — is on the agents.
+
+### What you get out
+
+A **spec document**, a **test case document**, and an **execution report** (with screenshots) — all in markdown, all in your repo, all rerunnable.
+
+---
+
+## 💡 Why this exists
+
+E2E testing is the layer most often skipped by small teams and solo developers. Writing good tests by hand is slow; "vibe-coded" tests miss the unhappy paths; and there's no QA team to backstop you.
+
+This skill gives one developer the rigor of a dedicated QA process — structured specs, methodology-driven test design, real-browser execution, reproducible reports — **without** actually needing a QA team.
+
+---
+
+## 📚 Editions
+
+The skill ships in two **content-equivalent** editions. Pick whichever language your team works in.
+
+| Edition | Path | Prebuilt bundle | Best for |
+|---|---|---|---|
+| 🇬🇧 **English** | [`en/`](./en) | ✅ [Latest release](https://github.com/Loveforwa/spec-driven-test/releases/latest) | English-speaking teams, international collaboration |
+| 🇨🇳 **中文** | [`zh/`](./zh) | Build with `./scripts/build-skills.sh zh` | 团队用中文写规约和评审 |
+
+Each edition is a complete skill: `SKILL.md`, `references/` (agent rulebooks, testing methodologies, scenario patterns), `templates/`, and `examples/`.
+
+> **Note:** the prebuilt download in Releases is the **English** edition. The Chinese edition lives in source in `zh/`; build it locally with the script above if you want a `.skill` bundle.
+
+---
+
+## 🤝 Contributing
+
+This skill is a living document. **If you have a reasonable suggestion, we'll adopt it.**
+
+That includes — but isn't limited to:
+
+- 🐛 Bugs you hit running the workflow on a real project
+- ✏️ Wording that's unclear, ambiguous, or wrong
+- 🧩 Missing scenario patterns — features whose patterns aren't covered
+- 📐 Methodology references that could be clearer or more accurate
+- 🌐 Translation parity issues between the two editions
+- 📝 New examples drawn from real projects
+- 🛠️ Improvements to templates
+
+### How to send feedback
+
+| You have… | Send it via |
+|---|---|
+| 🐛 A bug or usage issue | [Open an Issue](https://github.com/Loveforwa/spec-driven-test/issues/new) — what you tested, which agent, what happened, what you expected |
+| 💡 An improvement idea | An Issue with the `enhancement` label, **or** a Pull Request |
+| 🌐 A translation fix | Pull Request — please update **both** `en/` and `zh/` so editions stay in sync |
+| 📝 A real-world example | Pull Request to `en/examples/` **and** `zh/examples/` |
+
+We're a small project. **Feedback and PRs from anyone are appreciated and will be taken seriously.**
+
+---
+
+<a id="中文"></a>
+
 ## 中文
+
+> Cowork 用户用中文工作?直接克隆仓库,把 [`zh/`](./zh) 这份当 skill 用,或者跑 `./scripts/build-skills.sh zh` 本地打成 `.skill`。
 
 ### 这个 skill 是做什么的
 
-`spec-driven-test` 把"写点 E2E 测试"这件事拆成一套严谨的三阶段流程,由三个 Claude agent 协作完成,中间还有两道人类 review 把关:
+把"写点 E2E 测试"这件事拆成一套有方法论的流程,由三个 Claude agent 协作完成,中间还有**两道人类 review** 把关:
 
-1. **Cartographer(制图师)** 读你的代码,产出被测功能的**规约**(spec),再把规约翻译成具体的**测试用例**。
-2. **Inspector(检查员)** 用一套测试方法论(边界值分析、等价类划分、决策表、状态迁移、用例测试、Right-BICEP)和场景模式清单审查测试用例,输出 P0 / P1 / P2 分级反馈。
-3. **Operator(执行员)** 在真实浏览器里(Playwright 或 Claude in Chrome)跑每一条测试用例,产出附带截图证据的执行报告。
+1. **📐 Cartographer(制图师)** 读你的代码,产出被测功能的**规约**(spec),再把规约翻译成具体的**测试用例**。
+2. **🔍 Inspector(检查员)** 用一套测试方法论(边界值分析、等价类划分、决策表、状态迁移、用例测试、Right-BICEP)和场景模式清单审查测试用例,输出 P0 / P1 / P2 分级反馈。
+3. **🎭 Operator(执行员)** 在真实浏览器里(Playwright 或 Claude in Chrome)跑每一条测试用例,产出附带截图证据的执行报告。
 
-两道人类 review(一道在规约后,一道在用例后)把"规约是不是对的"和"这些用例是不是我们想要的"这种关键判断留给人,但所有繁琐工作都交给 agent 做。
-
-### 为什么要有这个 skill
-
-E2E 测试是小团队和个人开发者最容易跳过的一层——手写好测试太慢,"凭感觉测一下"又会漏掉异常路径。这个 skill 想让一个独立开发者也能享有一个完整 QA 流程的严谨度:结构化规约、方法论驱动的用例设计、真实浏览器执行、可复现的报告——而不需要专门搭一支 QA 团队。
+两道人类 review(规约后 + 用例后)把"规约对不对"和"这是不是我们想跑的用例"留给人判断,其余的繁琐工作交给 agent。
 
 ### 工作流程
 
-你让 skill 测一个功能(比如"测一下登录流程"、"测一下聊天消息渲染"),它就把整个测试流程拆成 7 个阶段,中间嵌入**两道人类 review**:
+详细的工作流程图见上方英文章节的 [Mermaid 图](#-how-it-works)(GitHub 会原生渲染)。简化版:
 
 ```
-   你: "测一下功能 X"
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 1. Cartographer · 阶段 0                    │  确认测试范围,收集可选信息
-   │    确认测试范围                              │  (ground truth、UI 截图、
-   │                                            │   Operator 工具能力)
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 2. Cartographer · 阶段 1                    │  读代码 → 写出结构化规约文档,
-   │    代码 → 规约                              │  并标注匹配的"场景模式"
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ╔════════════════════════════════════════════╗
-   ║  人类 Review #1 —— 规约写得对不对?          ║  你看一眼规约,把 agent 读
-   ╚════════════════════════════════════════════╝  错的地方改回来
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 3. Cartographer · 阶段 2(+ 2.5)            │  规约 → 具体测试用例(步骤、
-   │    规约 → 测试用例                          │  期望结果、截图节点);填场景
-   │                                            │  模式自检表
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 4. Inspector                               │  用测试方法论 + 场景模式审查
-   │    方法论审查                               │  用例,输出 P0 / P1 / P2 分级
-   │                                            │  反馈
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 5. Cartographer · 阶段 3                    │  对每条反馈:接受 & 修改,
-   │    回应反馈                                 │  或拒绝并写明 rationale
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ╔════════════════════════════════════════════╗
-   ║  人类 Review #2 —— 这是我们想跑的用例吗?    ║  你看一眼最终用例,确认放
-   ╚════════════════════════════════════════════╝  行执行
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 6. Operator                                │  在真实浏览器里(Playwright /
-   │    真实浏览器执行                            │  Claude in Chrome)跑每一条
-   │                                            │  用例,留截图证据
-   └────────────────────────────────────────────┘
-        │
-        ▼
-   ┌────────────────────────────────────────────┐
-   │ 7. 执行报告                                 │  每条用例的通过/失败结果,
-   │                                            │  附截图证据,失败的附根因分析
-   └────────────────────────────────────────────┘
+你: "测一下功能 X"
+   ↓
+Cartographer 阶段 0/1  →  规约
+   ↓
+🛂 Human Review #1
+   ↓
+Cartographer 阶段 2/2.5  →  测试用例
+   ↓
+Inspector 方法论审查  →  P0/P1/P2 反馈
+   ↓
+Cartographer 阶段 3  →  接受/拒绝 + rationale
+   ↓
+🛂 Human Review #2
+   ↓
+Operator 真实浏览器执行  →  📋 执行报告 + 截图
 ```
 
-**三个 agent 的边界:**
+### 三个 agent 的边界
 
 | Agent | 角色 | 看什么 | 不看什么 |
 |---|---|---|---|
-| **Cartographer** | 制图师 | 代码 + 规约 + 用例 + Inspector 反馈 | (无限制) |
-| **Inspector** | 检查员 | 规约 + 用例 + 方法论 | **不看代码**——保持审查独立性 |
-| **Operator** | 执行员(模拟真实用户) | 用例 + 浏览器实际状态 | **不看规约设计意图**;trigger(被测功能的触发动作)**必须**走 UI,不允许走 API/SQL 捷径,否则 E2E 测试退化为 API 测试 |
+| 📐 **Cartographer** | 制图师 | 代码 + 规约 + 用例 + 反馈 | *(无限制)* |
+| 🔍 **Inspector** | 检查员 | 规约 + 用例 + 方法论 | **不看代码** —— 保持审查独立性 |
+| 🎭 **Operator** | 执行员 | 用例 + 浏览器实际状态 | **不看规约设计意图**;trigger 必须走 UI,**禁止 API / SQL 捷径** |
 
-**Operator 混合执行模式**:Cartographer 在阶段 2 给每个用例标一个执行模式——**Playwright**(数据流 / 回归)、**LLM 驱动浏览器**(视觉 / UX)或**混合**(Playwright 跑流程 + 关键节点截图,LLM 后处理判断截图)。多数 chatbot / CRUD / 个人主页类测试都是混合模式。
+### Operator 混合执行模式
 
-**你(人类)实际做的事**:发起测试请求,然后在两道 review 阶段看一眼规约和用例。其余的——读代码、写规约、选方法论、设计用例、操作浏览器、出报告——都是 agent 干。
-
-**你拿到的产出**:规约文档、测试用例文档、执行报告(带截图)——全是 markdown,可以提交进 git,可以重跑。
-
-### 两个语言版本
-
-这个仓库提供中英两个内容等价的版本,按你团队的工作语言选一个就行。
-
-| 版本 | 路径 | 适用场景 |
+| 模式 | 适用 | 怎么做 |
 |---|---|---|
-| **中文** | [`zh/`](./zh) | 团队用中文写规约和评审,或代码注释多数是中文。 |
-| **English** | [`en/`](./en) | 团队用英文工作,或者要把 skill 分享给国际协作者。 |
+| 🤖 **Playwright** | 数据流 / 回归 / 业务逻辑 | 生成 `.spec.ts`,确定性执行 |
+| 👁️ **LLM 浏览器** | 视觉 / 渲染 / UX / 探索性 | LLM 实时操作浏览器 + 看截图判断 |
+| ⚖️ **混合** *(默认)* | chatbot / CRUD / 多数业务功能 | Playwright 跑流程 + 关键节点截图,LLM 后处理判断截图 |
 
-每个版本都是完整 skill:`SKILL.md`、`references/`(三个 agent 各自的规则手册、方法论、场景模式参考)、`templates/`、`examples/`。
+### 你拿到的产出
 
-### 怎么安装
+**规约文档** + **测试用例文档** + **执行报告**(带截图)—— 全是 markdown,可以提交进 git,可以重跑。
 
-**方式 1 —— 下载打包好的 `.skill`(最简单)**
-
-去最新 release 下载,把 `.skill` 文件拖进 Cowork 的 skill 安装界面(或解压到 `~/.claude/skills/`):
-
-- 🇨🇳 中文版: [`spec-driven-test-zh.skill`](https://github.com/Loveforwa/spec-driven-test/releases/latest/download/spec-driven-test-zh.skill)
-- 🇬🇧 英文版: [`spec-driven-test-en.skill`](https://github.com/Loveforwa/spec-driven-test/releases/latest/download/spec-driven-test-en.skill)
-- 或者看所有版本:[Releases 页面](https://github.com/Loveforwa/spec-driven-test/releases)
-
-**方式 2 —— 克隆仓库后复制目录**
+### 安装
 
 ```sh
 git clone https://github.com/Loveforwa/spec-driven-test.git
 cp -r spec-driven-test/zh /path/to/your/skills/spec-driven-test
 ```
 
-**方式 3 —— 自己打包 `.skill`**
+或者本地打包成 `.skill`:
 
 ```sh
-git clone https://github.com/Loveforwa/spec-driven-test.git
 cd spec-driven-test
-./scripts/build-skills.sh        # 生成 dist/spec-driven-test-{zh,en}.skill
+./scripts/build-skills.sh zh
+# 产物:dist/spec-driven-test-zh.skill
 ```
 
-### 贡献 —— 任何合理意见都会采纳
+> Releases 里只发布英文版的预编译 `.skill`。中文版要么直接 clone 用源目录,要么本地打包(中文版 maintainer 容量有限,所以不发预编译包)。
 
-这个 skill 是活文档。**只要是合理的反馈和建议,我们都会认真考虑并采纳。** 包括但不限于:
+### 贡献
 
-- 你在真实项目里跑这套流程时踩到的 bug
-- 表述不清楚、有歧义或者直接写错的地方
-- 缺失的场景模式(比如你测了某个功能,发现现有模式没覆盖到)
-- 方法论参考有不准确或可以更清晰的地方
-- 中英两个版本之间的翻译不一致
-- 来自真实项目的新示例
-- 模板的改进建议
+任何合理的反馈和 PR 都会被认真对待。详见上方英文 [Contributing](#-contributing) 章节——交 Issue 写明你测的是什么、跑的哪个 agent、发生了什么、期望什么;改翻译请同步改 `en/` 和 `zh/`。
 
-**怎么贡献:**
+---
 
-- **反馈使用问题或 bug**:提 GitHub Issue。告诉我们你在测什么、当时跑的是哪个 agent、发生了什么、你期望发生什么。能附日志或对话片段最好。
-- **提改进建议**:开一个 Issue 标 `enhancement`,或者直接发 Pull Request。
-- **修翻译**:欢迎 PR——请同时改 `zh/` 和 `en/`,保持两个版本同步。
-- **加真实案例**:欢迎 PR 到 `zh/examples/` 和 `en/examples/`。
+<div align="center">
 
-这是个小项目。来自任何人的合理反馈和 PR 都会被认真对待。
+**Built for small teams · Made with Claude**
 
-### 用法问题
+*If this skill helps you ship better tests, ⭐ the repo so others can find it.*
 
-如果你有使用上的疑问,不是 bug,也请开 Issue——大概率别人也有同样的问题。
+</div>
