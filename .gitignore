@@ -1,3 +1,7 @@
 .DS_Store
 *.swp
 *~
+
+# Build artifacts — .skill bundles are uploaded as GitHub Release assets,
+# not committed to the repo. Run scripts/build-skills.sh to regenerate.
+dist/
