@@ -11,7 +11,7 @@
 [![Latest release](https://img.shields.io/github/v/release/Loveforwa/spec-test.skill?include_prereleases&label=latest&color=blue)](https://github.com/Loveforwa/spec-test.skill/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange)](#-contributing)
 
-[**Download**](#-install) · [**How it works**](#-how-it-works) · [**Contribute**](#-contributing) · [**中文**](#中文)
+[**Download**](#-install) · [**How it works**](#-how-it-works) · [**Contribute**](#-contributing)
 
 </div>
 
@@ -186,89 +186,6 @@ That includes — but isn't limited to:
 | 📝 A real-world example | Pull Request to `en/examples/` **and** `zh/examples/` |
 
 We're a small project. **Feedback and PRs from anyone are appreciated and will be taken seriously.**
-
----
-
-<a id="中文"></a>
-
-## 中文
-
-> Cowork 用户用中文工作?直接克隆仓库,把 [`zh/`](./zh) 这份当 skill 用,或者跑 `./scripts/build-skills.sh zh` 本地打成 `.skill`。
-
-### 这个 skill 是做什么的
-
-把"写点 E2E 测试"这件事拆成一套有方法论的流程,由三个 Claude agent 协作完成,中间还有**两道人类 review** 把关:
-
-1. **📐 Cartographer(制图师)** 读你的代码,产出被测功能的**规约**(spec),再把规约翻译成具体的**测试用例**。
-2. **🔍 Inspector(检查员)** 用一套测试方法论(边界值分析、等价类划分、决策表、状态迁移、用例测试、Right-BICEP)和场景模式清单审查测试用例,输出 P0 / P1 / P2 分级反馈。
-3. **🎭 Operator(执行员)** 在真实浏览器里(Playwright 或 Claude in Chrome)跑每一条测试用例,产出附带截图证据的执行报告。
-
-两道人类 review(规约后 + 用例后)把"规约对不对"和"这是不是我们想跑的用例"留给人判断,其余的繁琐工作交给 agent。
-
-### 工作流程
-
-详细的工作流程图见上方英文章节的 [Mermaid 图](#-how-it-works)(GitHub 会原生渲染)。简化版:
-
-```
-你: "测一下功能 X"
-   ↓
-Cartographer 阶段 0/1  →  规约
-   ↓
-🛂 Human Review #1
-   ↓
-Cartographer 阶段 2/2.5  →  测试用例
-   ↓
-Inspector 方法论审查  →  P0/P1/P2 反馈
-   ↓
-Cartographer 阶段 3  →  接受/拒绝 + rationale
-   ↓
-🛂 Human Review #2
-   ↓
-Operator 真实浏览器执行  →  📋 执行报告 + 截图
-```
-
-### 三个 agent 的边界
-
-| Agent | 角色 | 看什么 | 不看什么 |
-|---|---|---|---|
-| 📐 **Cartographer** | 制图师 | 代码 + 规约 + 用例 + 反馈 | *(无限制)* |
-| 🔍 **Inspector** | 检查员 | 规约 + 用例 + 方法论 | **不看代码** —— 保持审查独立性 |
-| 🎭 **Operator** | 执行员 | 用例 + 浏览器实际状态 | **不看规约设计意图**;trigger 必须走 UI,**禁止 API / SQL 捷径** |
-
-### Operator 混合执行模式
-
-| 模式 | 适用 | 怎么做 |
-|---|---|---|
-| 🤖 **Playwright** | 数据流 / 回归 / 业务逻辑 | 生成 `.spec.ts`,确定性执行 |
-| 👁️ **LLM 浏览器** | 视觉 / 渲染 / UX / 探索性 | LLM 实时操作浏览器 + 看截图判断 |
-| ⚖️ **混合** *(默认)* | chatbot / CRUD / 多数业务功能 | Playwright 跑流程 + 关键节点截图,LLM 后处理判断截图 |
-
-### 你拿到的产出
-
-**规约文档** + **测试用例文档** + **执行报告**(带截图)—— 全是 markdown,可以提交进 git,可以重跑。
-
-### 安装
-
-```sh
-git clone https://github.com/Loveforwa/spec-test.skill.git
-cp -r spec-test.skill/zh /path/to/your/skills/spec-driven-test
-```
-
-或者本地打包成 `.skill`:
-
-```sh
-cd spec-test.skill
-./scripts/build-skills.sh zh
-# 产物:dist/spec-test-zh.skill
-```
-
-> Releases 里只发布英文版的预编译 `.skill`。中文版要么直接 clone 用源目录,要么本地打包(中文版 maintainer 容量有限,所以不发预编译包)。
-
-### 贡献
-
-任何合理的反馈和 PR 都会被认真对待。详见上方英文 [Contributing](#-contributing) 章节——交 Issue 写明你测的是什么、跑的哪个 agent、发生了什么、期望什么;改翻译请同步改 `en/` 和 `zh/`。
-
----
 
 <div align="center">
 
