@@ -10,7 +10,7 @@
 [![Editions](https://img.shields.io/badge/editions-EN%20%7C%20%E4%B8%AD%E6%96%87-success)](#-editions)
 [![Latest release](https://img.shields.io/github/v/release/Loveforwa/spec-test.skill?include_prereleases&label=latest&color=blue)](https://github.com/Loveforwa/spec-test.skill/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange)](#-contributing)
-![Star Check](https://fakestarchecker.com/api/badge/Loveforwa/spec-test.skill.svg)
+[![Star Check](https://fakestarchecker.com/api/badge/Loveforwa/spec-test.skill.svg)
 
 [**Download**](#-install) · [**How it works**](#-how-it-works) · [**Contribute**](#-contributing)
 
